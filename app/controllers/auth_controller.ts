@@ -8,27 +8,29 @@ export default class AuthController {
     const data = await request.validateUsing(registerValidator);
     const user = await User.create(data);
 
-    return response.status(201).json({message: "Usuario creado correctamente.", data: user});
+    return response.created({message: "Usuario creado correctamente.", data: user});
   }
   
   async login({request, response}: HttpContext) {
     const {username, password} = await request.validateUsing(loginValidator);
     const user = await User.verifyCredentials(username, password);
 
-    const token = await User.accessTokens.create(user);
-    return response.status(200).json({message: "Inicio de sesión con exito.", data: token});
+    if(!user.isActive) return response.unauthorized({message: "Usuario baneado, por favor contacta a administración."})
+
+    const token = await User.accessTokens.create(user, [], {expiresIn: "30 mins"});
+    return response.ok({message: "Inicio de sesión con exito.", data: token});
   }
   
   async logout({auth, response}: HttpContext) {
     const user = auth.user!;
     await User.accessTokens.delete(user, user.currentAccessToken.identifier);
 
-    return response.status(200).json({message: "Sesión cerrada con exito."});
+    return response.ok({message: "Sesión cerrada con exito."});
   }
   
   async me({auth, response}: HttpContext) {
     await auth.check();
-    return response.status(200).json({data: auth.user});
+    return response.ok({data: auth.user});
   }
 
 }
