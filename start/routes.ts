@@ -19,5 +19,6 @@ router.get('/', async () => {
 router.group(() => {
   router.group(() => {
     router.post('register', [AuthController, 'register']).as('auth.register');
+    router.post('login', [AuthController, 'login']).as('auth.login');
   }).prefix('v1');
 }).prefix('api')
