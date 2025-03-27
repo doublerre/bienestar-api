@@ -7,7 +7,8 @@ export const registerValidator = vine.compile(
         fullName: vine.string(),
         email: vine.string().email().normalizeEmail().unique(async (db, value) => {
             const match = await db.from('users').select('id').where('email', value).first()
-            return match;
+            console.log(match);
+            return !match;
         }),
         username: vine.string().unique(async (db, value) => {
             const match = await db.from('users').select('id').where('username', value).first()
