@@ -11,6 +11,7 @@ export default class extends BaseSchema {
       table.string('username', 50).notNullable().unique()
       table.string('password').notNullable()
       table.enum("role", ["ROLE_ADMIN", "ROLE_SUBCOMITE", "ROLE_ENLACES"]).notNullable()
+      table.boolean("isActive").notNullable().defaultTo(true);
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
