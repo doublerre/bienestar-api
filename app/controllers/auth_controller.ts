@@ -15,9 +15,9 @@ export default class AuthController {
     const {username, password} = await request.validateUsing(loginValidator);
     const user = await User.verifyCredentials(username, password);
 
-    if(!user.isActive) return response.unauthorized({message: "Usuario baneado, por favor contacta a administración."})
+    if(!user.isActive) return response.unauthorized({message: "Usuario inhabilitado, por favor contacta a administración."})
 
-    const token = await User.accessTokens.create(user, [], {expiresIn: "30 mins"});
+    const token = await User.accessTokens.create(user, ["*"], {expiresIn: "30 mins", name: "SESSION_TOKEN"});
     return response.ok({message: "Inicio de sesión con exito.", data: token});
   }
   
