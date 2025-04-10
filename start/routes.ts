@@ -24,5 +24,6 @@ router.group(() => {
     router.post('login', [AuthController, 'login']).as('auth.login');
 
     router.post('year-name', [YearNamesController, 'create']).as('year-name.create').use([middleware.auth() ,middleware.checkRoles(["ROLE_ADMIN"])]);
+    router.get('year-name', [YearNamesController, 'index']).as('year-name.index').use([middleware.auth() ,middleware.checkRoles(["ROLE_ADMIN"])]);
   }).prefix('v1');
 }).prefix('api')

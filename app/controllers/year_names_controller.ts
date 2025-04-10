@@ -11,4 +11,10 @@ export default class YearNamesController {
         return response.created({message: "Año creado correctamente.", data: year_name});
     }
 
+    async index({response}: HttpContext){
+        const year_names = await YearName.all();
+        if(year_names.length === 0) return response.notFound({message: "No se encontraron años."});
+        return response.ok({message: "Información obtenida correctamente.", data: year_names});
+    }
+
 }
