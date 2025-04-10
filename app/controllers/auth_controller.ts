@@ -17,7 +17,7 @@ export default class AuthController {
 
     if(!user.isActive) return response.unauthorized({message: "Usuario inhabilitado, por favor contacta a administración."})
 
-    const token = await User.accessTokens.create(user, ["*"], {expiresIn: "30 mins", name: "SESSION_TOKEN"});
+    const token = await User.accessTokens.create(user, ["*"], {expiresIn: "7 days", name: "SESSION_TOKEN"});
     return response.ok({message: "Inicio de sesión con exito.", data: token});
   }
   
