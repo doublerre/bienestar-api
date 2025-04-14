@@ -14,7 +14,7 @@ import YearNamesController from '#controllers/year_names_controller';
 
 router.get('/', async () => {
   return {
-    hello: 'world',
+    message: 'Autentifiquese para acceder a la API.',
   }
 })
 
