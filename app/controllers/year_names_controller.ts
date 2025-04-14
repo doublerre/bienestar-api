@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 
 import YearName from "#models/year_name";
-import { yearNameValidator } from "#validators/year_name";
+import { yearNameUpdateValidator, yearNameValidator } from "#validators/year_name";
 
 export default class YearNamesController {
 
@@ -21,6 +21,15 @@ export default class YearNamesController {
         const year_name = await YearName.find(params.id);
         if(!year_name) return response.notFound({message: "No se encontró un resultado válido."});
         return response.ok({message: "Información obtenida correctamente.", data: year_name});
+    }
+
+    async update({params, request, response}: HttpContext){
+        const year_name = await YearName.find(params.id);
+        if(!year_name) return response.notFound({message: "No se encontró un resultado válido."});
+        const data = await request.validateUsing(yearNameUpdateValidator);
+        year_name.merge(data);
+        await year_name.save();
+        return response.ok({message: "Año actualizado correctamente.", data: year_name});
     }
 
     async destroy({params, response}: HttpContext){
