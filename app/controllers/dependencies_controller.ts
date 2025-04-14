@@ -16,6 +16,13 @@ export default class DependenciesController {
         return response.ok({ message: "Información obtenida correctamente.", data: dependencies });
     }
 
+    async show ({params, request, response}: HttpContext){
+        const query_params = request.qs();
+        const dependency = await this.getDependenciesWithPreloads(query_params, params.id);
+        if(dependency.length === 0) return response.notFound({ message: "No se encontró un resultado válido." });
+        return response.ok({ message: "Información obtenida correctamente.", data: dependency });
+    }
+
     private async getDependenciesWithPreloads(params: any, id?: number){
         const query = Dependency.query();
         if(id) query.where('id', id);
