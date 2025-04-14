@@ -32,6 +32,8 @@ const namesFields = {
     token: 'token',
     role: 'rol',
     year_name_id: 'año',
+    subcommittee_id: 'subcomité',
+    dependency_id: 'dependencia',
 }
 
 vine.messagesProvider = new SimpleMessagesProvider(messages, namesFields);
