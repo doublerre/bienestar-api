@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 
 import Subcommittee from "#models/subcommittee";
-import { subcommitteeValidator } from "#validators/subbcommitte";
+import { subcommitteeUpdateValidator, subcommitteeValidator } from "#validators/subbcommitte";
 
 export default class SubcommitteesController {
     async store ({ request, response }: HttpContext) {
@@ -22,6 +22,15 @@ export default class SubcommitteesController {
         const subcommittee = await this.getSubcommitteesWithPreloads(query_params, params.id);
         if (subcommittee.length === 0) return response.notFound({ message: "No se encontró un resultado válido." });
         return response.ok({ message: "Información obtenida correctamente.", data: subcommittee });
+    }
+
+    async update ({ params, request, response }: HttpContext) {
+        const subbcommitte = await Subcommittee.find(params.id);
+        if (!subbcommitte) return response.notFound({ message: "No se encontró un resultado válido." });
+        const data = await request.validateUsing(subcommitteeUpdateValidator);
+        subbcommitte.merge(data);
+        await subbcommitte.save();
+        return response.ok({ message: "Subcomité actualizado correctamente.", data: subbcommitte });
     }
 
     private async getSubcommitteesWithPreloads(params: any, id?: number) {
