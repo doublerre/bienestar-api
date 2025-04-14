@@ -30,6 +30,6 @@ router.group(() => {
     router.put('year-name/:id', [YearNamesController, 'update']).as('year-name.update').use([middleware.auth() ,middleware.checkRoles(["ROLE_ADMIN"])]);
     router.delete('year-name/:id', [YearNamesController, 'destroy']).as('year-name.destroy').use([middleware.auth() ,middleware.checkRoles(["ROLE_ADMIN"])]);
 
-    router.resource('subcommittee', SubcommitteesController).apiOnly().except(['show', 'update', 'destroy']).as('subcommittee').use("*", [middleware.auth(), middleware.checkRoles(["ROLE_ADMIN"])]);
+    router.resource('subcommittee', SubcommitteesController).apiOnly().as('subcommittee').use("*", [middleware.auth(), middleware.checkRoles(["ROLE_ADMIN"])]);
   }).prefix('v1');
 }).prefix('api')
