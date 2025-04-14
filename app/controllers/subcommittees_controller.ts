@@ -37,6 +37,7 @@ export default class SubcommitteesController {
         const query = Subcommittee.query();
         if(id) query.where('id', id);
         if(params.year_name === "true") query.preload('yearName');
+        if(params.dependency === "true") query.preload('dependency');
 
         return query.exec();
     }
