@@ -8,4 +8,12 @@ export default class DependenciesController {
         const dependency = await Dependency.create(data);
         return response.created({ message: "Dependencia creada correctamente.", data: dependency });
     }
+
+    private async getDependenciesWithPreloads(params: any, id?: number){
+        const query = Dependency.query();
+        if(id) query.where('id', id);
+        if(params.subcommittee === "true") query.preload('subcommittee');
+
+        return query.exec();
+    }
 }
