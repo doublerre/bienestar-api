@@ -23,4 +23,11 @@ export default class YearNamesController {
         return response.ok({message: "Información obtenida correctamente.", data: year_name});
     }
 
+    async destroy({params, response}: HttpContext){
+        const year_name = await YearName.find(params.id);
+        if(!year_name) return response.notFound({message: "No se encontró un resultado válido."});
+        await year_name.delete();
+        return response.ok({message: "Año eliminado correctamente."});
+    }
+
 }
