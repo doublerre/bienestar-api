@@ -11,6 +11,7 @@ import AuthController from '#controllers/auth_controller';
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js';
 import YearNamesController from '#controllers/year_names_controller';
+import SubcommitteesController from '#controllers/subcommittees_controller';
 
 router.get('/', async () => {
   return {
@@ -28,5 +29,7 @@ router.group(() => {
     router.get('year-name/:id', [YearNamesController, 'show']).as('year-name.show').use([middleware.auth() ,middleware.checkRoles(["ROLE_ADMIN"])]);
     router.put('year-name/:id', [YearNamesController, 'update']).as('year-name.update').use([middleware.auth() ,middleware.checkRoles(["ROLE_ADMIN"])]);
     router.delete('year-name/:id', [YearNamesController, 'destroy']).as('year-name.destroy').use([middleware.auth() ,middleware.checkRoles(["ROLE_ADMIN"])]);
+
+    router.resource('subcommittee', SubcommitteesController).apiOnly().except(['show', 'update', 'destroy']).as('subcommittee').use("*", [middleware.auth(), middleware.checkRoles(["ROLE_ADMIN"])]);
   }).prefix('v1');
 }).prefix('api')
