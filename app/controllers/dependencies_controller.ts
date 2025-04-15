@@ -1,5 +1,5 @@
 import Dependency from '#models/dependency';
-import { dependencyValidator } from '#validators/dependency'
+import { dependencyUpdateValidator, dependencyValidator } from '#validators/dependency'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class DependenciesController {
@@ -21,6 +21,15 @@ export default class DependenciesController {
         const dependency = await this.getDependenciesWithPreloads(query_params, params.id);
         if(dependency.length === 0) return response.notFound({ message: "No se encontró un resultado válido." });
         return response.ok({ message: "Información obtenida correctamente.", data: dependency });
+    }
+
+    async update({params, request, response}: HttpContext){
+        const dependency = await Dependency.find(params.id);
+        if(!dependency) return response.notFound({message: "No se encontró un resultado válido."});
+        const data = await request.validateUsing(dependencyUpdateValidator);
+        dependency.merge(data);
+        await dependency.save();
+        return response.ok({ message: "Dependencia actualizada correctamente.", data: dependency });
     }
 
     private async getDependenciesWithPreloads(params: any, id?: number){
