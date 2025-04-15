@@ -25,12 +25,12 @@ export default class SubcommitteesController {
     }
 
     async update ({ params, request, response }: HttpContext) {
-        const subbcommitte = await Subcommittee.find(params.id);
-        if (!subbcommitte) return response.notFound({ message: "No se encontró un resultado válido." });
+        const subcommitte = await Subcommittee.find(params.id);
+        if (!subcommitte) return response.notFound({ message: "No se encontró un resultado válido." });
         const data = await request.validateUsing(subcommitteeUpdateValidator);
-        subbcommitte.merge(data);
-        await subbcommitte.save();
-        return response.ok({ message: "Subcomité actualizado correctamente.", data: subbcommitte });
+        subcommitte.merge(data);
+        await subcommitte.save();
+        return response.ok({ message: "Subcomité actualizado correctamente.", data: subcommitte });
     }
 
     private async getSubcommitteesWithPreloads(params: any, id?: number) {
