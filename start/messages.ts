@@ -20,6 +20,8 @@ const messages = {
     unique: 'El valor de {{ field }} ya existe en la base de datos.',
     exists: 'El valor de {{ field }} no existe en la base de datos.',
     'database.exists': 'El valor de {{ field }} no existe en la base de datos.',
+    'database.unique': 'El valor de {{ field }} ya existe en la base de datos.',
+    'database.foreignKey': 'El valor de {{ field }} no es válido.',
 }
 
 const namesFields = {
