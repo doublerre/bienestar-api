@@ -33,6 +33,6 @@ router.group(() => {
 
     router.resource('subcommittee', SubcommitteesController).apiOnly().as('subcommittee').use("*", [middleware.auth(), middleware.checkRoles(["ROLE_ADMIN"])]);
 
-    router.resource('dependency', DependenciesController).apiOnly().as('dependency').use("*", [middleware.auth(), middleware.checkRoles(["ROLE_ADMIN"])]);
+    router.resource('dependency', DependenciesController).apiOnly().as('dependency').use("*", [middleware.auth(), middleware.checkRoles(["ROLE_ADMIN", "ROLE_SUBCOMITE"])]);
   }).prefix('v1');
 }).prefix('api')
