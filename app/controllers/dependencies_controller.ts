@@ -1,3 +1,4 @@
+import ForbiddenException from '#exceptions/ForbiddenException';
 import Dependency from '#models/dependency';
 import { dependencyUpdateValidator, dependencyValidator } from '#validators/dependency'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -23,12 +24,18 @@ export default class DependenciesController {
         return response.ok({ message: "Información obtenida correctamente.", data: dependency });
     }
 
-    async update({params, request, response}: HttpContext){
+    async update({auth, params, request, response}: HttpContext){
         const dependency = await Dependency.find(params.id);
         if(!dependency) return response.notFound({message: "No se encontró un resultado válido."});
+
+        const user = auth.user;
+
+        this.authorizeDependencyAccess(user, dependency);
+
         const data = await request.validateUsing(dependencyUpdateValidator);
         dependency.merge(data);
         await dependency.save();
+        
         return response.ok({ message: "Dependencia actualizada correctamente.", data: dependency });
     }
 
@@ -36,7 +43,15 @@ export default class DependenciesController {
         const query = Dependency.query();
         if(id) query.where('id', id);
         if(params.subcommittee === "true") query.preload('subcommittee');
+        if(params.users === "true") query.preload('users');
 
         return query.exec();
+    }
+
+    private authorizeDependencyAccess(user: any, dependency: Dependency){
+        if(user.role === "ROLE_ADMIN") return;
+        if(user.role === "ROLE_SUBCOMITE" && user.subcommitteeId !== undefined && user.subcommitteeId === dependency.subcommitteeId) return;
+        
+        throw new ForbiddenException();
     }
 }
