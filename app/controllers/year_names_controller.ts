@@ -5,7 +5,7 @@ import { yearNameUpdateValidator, yearNameValidator } from "#validators/year_nam
 
 export default class YearNamesController {
 
-    async create({request, response}: HttpContext){
+    async store({request, response}: HttpContext){
         const data = await request.validateUsing(yearNameValidator);
         const year_name = await YearName.create(data);
         return response.created({message: "Año creado correctamente.", data: year_name});
