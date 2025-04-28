@@ -23,11 +23,13 @@ export default class DependenciesController {
     async show ({auth, params, request, response}: HttpContext){
         const query_params = request.qs();
         const dependency = await this.getDependenciesWithPreloads(query_params, params.id);
+
+        if(dependency.length === 0) return response.notFound({ message: "No se encontró un resultado válido." });
+
         const user = auth.user;
 
         this.authorizeDependencyAccess(user, dependency[0]);
 
-        if(dependency.length === 0) return response.notFound({ message: "No se encontró un resultado válido." });
         return response.ok({ message: "Información obtenida correctamente.", data: dependency });
     }
 
@@ -70,6 +72,7 @@ export default class DependenciesController {
 
     private authorizeDependencyAccess(user: any, dependency: Dependency){
         if(user.role === "ROLE_ADMIN") return;
+        console.log(user.subcommitteeId);
         if(user.role === "ROLE_SUBCOMITE" && user.subcommitteeId !== undefined && user.subcommitteeId === dependency.subcommitteeId) return;
         
         throw new ForbiddenException();
