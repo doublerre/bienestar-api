@@ -33,6 +33,13 @@ export default class SubcommitteesController {
         return response.ok({ message: "Subcomité actualizado correctamente.", data: subcommitte });
     }
 
+    async destroy ({ params, response }: HttpContext) {
+        const subcommittee = await Subcommittee.find(params.id);
+        if (!subcommittee) return response.notFound({ message: "No se encontró un resultado válido." });
+        await subcommittee.delete();
+        return response.ok({ message: "Subcomité eliminado correctamente." });
+    }
+
     private async getSubcommitteesWithPreloads(params: any, id?: number) {
         const query = Subcommittee.query();
         if(id) query.where('id', id);
