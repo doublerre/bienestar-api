@@ -10,16 +10,23 @@ export default class DependenciesController {
         return response.created({ message: "Dependencia creada correctamente.", data: dependency });
     }
 
-    async index ({request, response}: HttpContext){
+    async index ({auth, request, response}: HttpContext){
         const query_params = request.qs();
-        const dependencies = await this.getDependenciesWithPreloads(query_params);
+        const user = auth.user;
+
+        const dependencies = await this.getDependenciesWithPreloads(query_params, undefined, user);
+
         if(dependencies.length === 0) return response.notFound({ message: "No se encontraron resultados." });
         return response.ok({ message: "Información obtenida correctamente.", data: dependencies });
     }
 
-    async show ({params, request, response}: HttpContext){
+    async show ({auth, params, request, response}: HttpContext){
         const query_params = request.qs();
         const dependency = await this.getDependenciesWithPreloads(query_params, params.id);
+        const user = auth.user;
+
+        this.authorizeDependencyAccess(user, dependency[0]);
+
         if(dependency.length === 0) return response.notFound({ message: "No se encontró un resultado válido." });
         return response.ok({ message: "Información obtenida correctamente.", data: dependency });
     }
@@ -39,9 +46,22 @@ export default class DependenciesController {
         return response.ok({ message: "Dependencia actualizada correctamente.", data: dependency });
     }
 
-    private async getDependenciesWithPreloads(params: any, id?: number){
+    async destroy({auth, params, response}: HttpContext) {
+        const dependency = await Dependency.find(params.id);
+        if(!dependency) return response.notFound({message: "No se encontró un resultado válido."});
+
+        const user = auth.user;
+
+        this.authorizeDependencyAccess(user, dependency)
+
+        await dependency.delete();
+        return response.ok({ message: "Dependencia eliminada correctamente." });
+    }
+
+    private async getDependenciesWithPreloads(params: any, id?: number, user?: any){
         const query = Dependency.query();
         if(id) query.where('id', id);
+        if(user?.role === "ROLE_SUBCOMITE" && user.subcommitteeId !== undefined) query.where('subcommittee_id', user.subcommitteeId); 
         if(params.subcommittee === "true") query.preload('subcommittee');
         if(params.users === "true") query.preload('users');
 
@@ -55,3 +75,4 @@ export default class DependenciesController {
         throw new ForbiddenException();
     }
 }
+
