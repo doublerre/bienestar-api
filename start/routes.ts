@@ -25,11 +25,7 @@ router.group(() => {
     router.post('register', [AuthController, 'register']).as('auth.register').use([middleware.auth() ,middleware.checkRoles(["ROLE_ADMIN"])]);
     router.post('login', [AuthController, 'login']).as('auth.login');
 
-    router.post('year-name', [YearNamesController, 'create']).as('year-name.create').use([middleware.auth() ,middleware.checkRoles(["ROLE_ADMIN"])]);
-    router.get('year-name', [YearNamesController, 'index']).as('year-name.index').use([middleware.auth() ,middleware.checkRoles(["ROLE_ADMIN"])]);
-    router.get('year-name/:id', [YearNamesController, 'show']).as('year-name.show').use([middleware.auth() ,middleware.checkRoles(["ROLE_ADMIN"])]);
-    router.put('year-name/:id', [YearNamesController, 'update']).as('year-name.update').use([middleware.auth() ,middleware.checkRoles(["ROLE_ADMIN"])]);
-    router.delete('year-name/:id', [YearNamesController, 'destroy']).as('year-name.destroy').use([middleware.auth() ,middleware.checkRoles(["ROLE_ADMIN"])]);
+    router.resource('year-name', YearNamesController).apiOnly().as('year-name').use("*", [middleware.auth(), middleware.checkRoles(["ROLE_ADMIN"])]);
 
     router.resource('subcommittee', SubcommitteesController).apiOnly().as('subcommittee').use("*", [middleware.auth(), middleware.checkRoles(["ROLE_ADMIN"])]);
 
