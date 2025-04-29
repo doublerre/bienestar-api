@@ -1,7 +1,7 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'subcommittees_dependencies'
+  protected tableName = 'dependency_subcommittee'
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
