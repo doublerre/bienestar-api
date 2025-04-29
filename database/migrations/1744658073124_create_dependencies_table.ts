@@ -7,9 +7,6 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.string('name', 50).notNullable()
-      table.integer('subcommittee_id').unsigned().notNullable()
-
-      table.foreign('subcommittee_id').references('id').inTable('subcommittees').onDelete('CASCADE').onUpdate('CASCADE')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
