@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column, hasMany, manyToMany } from '@adonisjs/lucid/orm'
 import YearName from './year_name.js'
-import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo, HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
 import Dependency from './dependency.js'
 import User from './user.js'
 
@@ -18,8 +18,8 @@ export default class Subcommittee extends BaseModel {
   @belongsTo(() => YearName)
   declare yearName: BelongsTo<typeof YearName>
 
-  @hasMany(() => Dependency)
-  declare dependency: HasMany<typeof Dependency>
+  @manyToMany(() => Dependency)
+  declare dependency: ManyToMany<typeof Dependency>
 
   @hasMany(() => User)
   declare users: HasMany<typeof User>
