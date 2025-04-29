@@ -6,7 +6,8 @@ import type { HttpContext } from '@adonisjs/core/http'
 export default class DependenciesController {
     async store ({request, response}: HttpContext){
         const data = await request.validateUsing(dependencyValidator);
-        const dependency = await Dependency.create(data);
+        const dependency = await Dependency.create({name: data.name});
+        if(data.subcommittee_ids && Array.isArray(data.subcommittee_ids)) await dependency.related('subcommittee').attach(data.subcommittee_ids);
         return response.created({ message: "Dependencia creada correctamente.", data: dependency });
     }
 
@@ -38,12 +39,13 @@ export default class DependenciesController {
         if(!dependency) return response.notFound({message: "No se encontró un resultado válido."});
 
         const user = auth.user;
-
         this.authorizeDependencyAccess(user, dependency);
 
         const data = await request.validateUsing(dependencyUpdateValidator);
-        dependency.merge(data);
+        dependency.merge({name: data.name});
         await dependency.save();
+
+        if(data.subcommittee_ids && Array.isArray(data.subcommittee_ids)) await dependency.related('subcommittee').sync(data.subcommittee_ids);
         
         return response.ok({ message: "Dependencia actualizada correctamente.", data: dependency });
     }
