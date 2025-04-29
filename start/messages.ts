@@ -35,6 +35,7 @@ const namesFields = {
     role: 'rol',
     year_name_id: 'año',
     subcommittee_id: 'subcomité',
+    subcommittee_ids: 'subcomités',
     dependency_id: 'dependencia',
 }
 
