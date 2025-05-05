@@ -16,10 +16,10 @@ export default class Activity extends BaseModel {
   declare finalGoal: number
 
   @column()
-  declare startDate: DateTime | null
+  declare startDate: Date | null
 
   @column()
-  declare endDate: DateTime | null
+  declare endDate: Date | null
 
   @column()
   declare population: number
@@ -28,7 +28,7 @@ export default class Activity extends BaseModel {
   declare narrative: string | null
 
   @column()
-  declare investment: number
+  declare budget: number
 
   @column()
   declare justification: string | null
